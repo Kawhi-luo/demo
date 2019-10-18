@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<style type="text/css">
+	canvas{width: 100%;height: 100%;} /*这里是将下面canvas绘制放大后的视频缩小为设备的大小*/
+	video{display: none}
+	.palyChange {
+		font-size: 20px;
+	}
+</style>
+<body>
+	<video  style="position: relative;  object-fit: fill;" loop id="video1" x5-video-player-type="h5" x5-video-orientation="h5" x5-video-player-fullscreen="true" x-webkit-airplay="true" x5-playsinline="true" webkit-playsinline="true" playsinline="true" src="https://www.runoob.com/try/demo_source/movie.mp4"></video>
+	<canvas id="myCanvas" width="400" height="400"></canvas>
+	<img src='https://www.w3school.com.cn/i/eg_tulip.jpg' id='poster' style='display: none;' >
+	<div class='palyChange'>控制</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+    var timer=null,imger=null;
+    var video=document.getElementById('video1');
+    var poster=document.getElementById('poster'); //用于视频初始化poster图片
+    var canvas = document.getElementById("myCanvas");
+    var context = canvas.getContext("2d");
+    canvas.width = window.innerWidth*2;  //获取屏幕宽度作为canvas的宽度  这个设置的越大，画面越清晰（相当于绘制的图像大，然后被css缩小）
+    canvas.height = window.innerHeight*2;
+    imger = setTimeout(function () {
+        context.drawImage(poster, 0, 0, canvas.width, canvas.height);//canvas上绘制postere图片 也可以点击播放后隐藏图片无需绘制
+    },1000)
+    function draw1() {//绘制视频
+        video.play();
+        timer = setInterval(function(){
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);//绘制视频
+        },40);
+    };
+    var isplay=false;//视频播放状态5
+    $('#myCanvas').on('click',function(e){
+        var e=e || event;
+        e.preventDefault();
+        if(!isplay){
+            isplay=true;
+            video.pause();
+            $('.palyChange').show();
+            clearInterval(timer)
+        }else{
+            video.play();
+            $('.palyChange').hide();
+            isplay=false;
+            draw1()
+        }
+
+    })
+    $('.palyChange').click(function(){ //初始化暂停状态下 点击播放（开始绘制视频）
+        video.play();
+        $('.palyChange').hide();
+        isplay=false;
+        draw1();
+    });
+</script>
+</html>
